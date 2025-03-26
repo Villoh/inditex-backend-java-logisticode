@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = UnauthorizedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public @ResponseBody CustomHttpResponse handleUnauthorizedException(UnauthorizedException ex) {
-        return new CustomHttpResponse(ex.isSuccess(), ex.getMessage());
+        return new CustomHttpResponse(ex.getMessage());
     }
 
     /**
@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public @ResponseBody CustomHttpResponse handleBadRequestException(BadRequestException ex) {
-        return new CustomHttpResponse(ex.isSuccess(), ex.getMessage());
+        return new CustomHttpResponse(ex.getMessage());
     }
 
     /**
@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public @ResponseBody CustomHttpResponse handleBadRequestException(NotFoundException ex) {
-        return new CustomHttpResponse(ex.isSuccess(), ex.getMessage());
+        return new CustomHttpResponse(ex.getMessage());
     }
 
     /**
@@ -62,6 +62,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = InternalServerErrorException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public @ResponseBody CustomHttpResponse handleInternalServerErrorException(InternalServerErrorException ex) {
-    	return new CustomHttpResponse(ex.isSuccess(), ex.getMessage());
+    	return new CustomHttpResponse(ex.getMessage());
     }
 }

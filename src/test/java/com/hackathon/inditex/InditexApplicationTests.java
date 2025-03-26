@@ -8,6 +8,7 @@ class InditexApplicationTests {
 
 	@Test
 	void contextLoads() {
+		// Test app startup
 	}
 
 }

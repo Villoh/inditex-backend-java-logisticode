@@ -6,21 +6,12 @@ package com.hackathon.inditex.exception;
 public class UnauthorizedException extends GenericException {
 
     /**
-     * Constructs a new instance of this class with the specified detail message.
-     *
-     * @param message the detail message
-     */
-    public UnauthorizedException(boolean success, String message) {
-        super(success, message);
-    }
-
-    /**
      * Constructs a new instance of this class with the specified detail message and cause.
      *
      * @param message the detail message
      * @param cause   the cause
      */
-    public UnauthorizedException(boolean success, String message, Throwable cause) {
-        super(success, message, cause);
+    public UnauthorizedException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

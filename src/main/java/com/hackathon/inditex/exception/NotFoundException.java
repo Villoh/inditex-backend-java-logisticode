@@ -13,21 +13,10 @@ public class NotFoundException extends GenericException {
     /**
      * Constructs a new instance of BadRequestException with the specified success status, message, and cause.
      *
-     * @param success   the success status
      * @param message  the error message
      * @param cause     the cause of the exception (optional)
      */
-    public NotFoundException(boolean success, String message, Throwable cause) {
-        super(success, message, cause);
-    }
-
-    /**
-     * Constructs a new instance of BadRequestException with the specified success status and message.
-     *
-     * @param success   the success status
-     * @param message  the error message
-     */
-    public NotFoundException(boolean success, String message) {
-        super(success, message);
+    public NotFoundException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

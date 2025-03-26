@@ -1,11 +1,24 @@
 package com.hackathon.inditex.model.entity;
 
-import jakarta.persistence.*;
+import com.hackathon.inditex.model.dto.Coordinates;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@Builder
 @Table(name = "centers", uniqueConstraints = @UniqueConstraint(columnNames = {"latitude", "longitude"}))
+@NoArgsConstructor
+@AllArgsConstructor
 public class Center {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
