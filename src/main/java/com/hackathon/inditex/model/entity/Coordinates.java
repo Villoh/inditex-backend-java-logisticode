@@ -1,4 +1,4 @@
-package com.hackathon.inditex.Entities;
+package com.hackathon.inditex.model.entity;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
