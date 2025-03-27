@@ -41,6 +41,7 @@ public class CenterServiceImpl implements CenterService {
         return centerMapper.centersToCenterDtos(centers);
     }
 
+
     @Override
     public ResponseMessageDTO updateCenter(Long id, CenterUpdateDTO centerUpdateDTO) {
         Center center = centerRepository.findById(id)
@@ -67,7 +68,6 @@ public class CenterServiceImpl implements CenterService {
 
     @Override
     public ResponseMessageDTO deleteCenter(Long id) {
-        //centerValidator.validateDelete(id);
         centerRepository.deleteById(id);
         return ResponseMessageDTO.builder()
                 .message(Constant.Center.DELETED_CENTER)
