@@ -61,7 +61,7 @@ public class ValidationUtil {
     }
 
     public static void validateRegex(String actual, String regexPattern, GenericException exception) throws GenericException{
-        if(actual.matches(regexPattern)){
+        if(!actual.matches(regexPattern)){
             throw exception;
         }
     }

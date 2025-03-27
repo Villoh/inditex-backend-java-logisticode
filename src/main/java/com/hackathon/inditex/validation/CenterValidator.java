@@ -2,6 +2,7 @@ package com.hackathon.inditex.validation;
 
 import com.hackathon.inditex.exception.BadRequestException;
 import com.hackathon.inditex.exception.InternalServerErrorException;
+import com.hackathon.inditex.exception.NotFoundException;
 import com.hackathon.inditex.model.dto.Coordinates;
 import com.hackathon.inditex.model.dto.center.CenterUpdateDTO;
 import com.hackathon.inditex.model.entity.Center;
@@ -46,7 +47,7 @@ public class CenterValidator {
     public void validateDelete(Long id){
         ValidationUtil.validateNotNullOrBlank(id, new InternalServerErrorException(Constant.Center.INVALID_INPUT_FIELDS, null));
         if(!centerRepository.existsById(id)){
-            throw new InternalServerErrorException(Constant.Center.CENTER_NOT_FOUND, null);
+            throw new NotFoundException(Constant.Center.CENTER_NOT_FOUND, null);
         }
     }
 
@@ -71,6 +72,6 @@ public class CenterValidator {
 
     private void validateCapacity(String capacity) {
         ValidationUtil.validateNotNullOrBlank(capacity, new InternalServerErrorException(Constant.Center.INVALID_INPUT_FIELDS, null));
-        ValidationUtil.validateRegex(capacity, "^[BMS]{1,3}$", new InternalServerErrorException(Constant.Center.UNRECOGNIZED_CAPACITY, null));
+        ValidationUtil.validateRegex(capacity, "^[BMSbms]{1,3}$", new InternalServerErrorException(Constant.Center.UNRECOGNIZED_CAPACITY, null));
     }
 }
