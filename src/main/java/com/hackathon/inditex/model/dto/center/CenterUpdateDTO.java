@@ -4,7 +4,7 @@ import com.hackathon.inditex.model.dto.Coordinates;
 import lombok.Data;
 
 @Data
-public class UpdateCenterDTO {
+public class CenterUpdateDTO {
     private String name;
     private String capacity;
     private String status;

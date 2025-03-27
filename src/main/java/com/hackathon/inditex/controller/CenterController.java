@@ -3,7 +3,7 @@ package com.hackathon.inditex.controller;
 import com.hackathon.inditex.model.dto.ResponseMessageDTO;
 import com.hackathon.inditex.model.dto.center.CenterCreationDTO;
 import com.hackathon.inditex.model.dto.center.CenterDTO;
-import com.hackathon.inditex.model.dto.center.UpdateCenterDTO;
+import com.hackathon.inditex.model.dto.center.CenterUpdateDTO;
 import com.hackathon.inditex.service.CenterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -39,8 +39,8 @@ public class CenterController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ResponseMessageDTO> updateCenter(@PathVariable Long id, @RequestBody UpdateCenterDTO updateCenterDto){
-        ResponseMessageDTO responseMessageDTO = centerService.updateCenter(id, updateCenterDto);
+    public ResponseEntity<ResponseMessageDTO> updateCenter(@PathVariable Long id, @RequestBody CenterUpdateDTO centerUpdateDto){
+        ResponseMessageDTO responseMessageDTO = centerService.updateCenter(id, centerUpdateDto);
         return ResponseEntity.ok(responseMessageDTO);
     }
 

@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface CenterRepository extends JpaRepository<Center, Long> {
 
-    Boolean existsByCoordinates_LatitudeAndCoordinates_Longitude(Double latitude, Double longitude);
+    boolean existsByCoordinates_LatitudeAndCoordinates_Longitude(Double latitude, Double longitude);
 
     @Query(value = """
     SELECT c.*,
