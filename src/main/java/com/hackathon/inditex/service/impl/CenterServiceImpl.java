@@ -46,13 +46,17 @@ public class CenterServiceImpl implements CenterService {
         Center center = centerRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(Constant.Center.CENTER_NOT_FOUND, null));
 
-        centerValidator.validateUpdate(center, centerUpdateDTO);
+        centerValidator.validateUpdate(centerUpdateDTO);
 
         Optional.ofNullable(centerUpdateDTO.getName()).ifPresent(center::setName);
         Optional.ofNullable(centerUpdateDTO.getCapacity()).ifPresent(center::setCapacity);
         Optional.ofNullable(centerUpdateDTO.getStatus()).ifPresent(center::setStatus);
         Optional.ofNullable(centerUpdateDTO.getMaxCapacity()).ifPresent(center::setMaxCapacity);
         Optional.ofNullable(centerUpdateDTO.getCoordinates()).ifPresent(center::setCoordinates);
+
+        //Validate Max Capacity after updating it
+        centerValidator.validateMaxCapacityOnUpdate(centerUpdateDTO.getCurrentLoad(), center.getMaxCapacity());
+        // Update current load after validation
         Optional.ofNullable(centerUpdateDTO.getCurrentLoad()).ifPresent(center::setCurrentLoad);
 
         centerRepository.save(center);

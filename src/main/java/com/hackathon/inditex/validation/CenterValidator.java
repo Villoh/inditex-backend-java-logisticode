@@ -32,12 +32,9 @@ public class CenterValidator {
     /**
      * Validates the update of a center.
      *
-     * @param center The center to be updated.
      * @param centerUpdateDTO The DTO containing the updated information for the center.
      */
-    public void validateUpdate(Center center, CenterUpdateDTO centerUpdateDTO) {
-        Optional.ofNullable(centerUpdateDTO.getCurrentLoad())
-                .ifPresent(load -> validateMaxCapacity(load, center.getMaxCapacity()));
+    public void validateUpdate(CenterUpdateDTO centerUpdateDTO) {
         Optional.ofNullable(centerUpdateDTO.getCoordinates())
                 .ifPresent(this::validateCenterExistsByLatAndLong);
     }
@@ -52,5 +49,11 @@ public class CenterValidator {
     private void validateMaxCapacity(Integer load, Integer maxCapacity) {
         ValidationUtil.validateNotNullOrBlankBulk(Arrays.asList(load, maxCapacity), Constant.Center.INVALID_INPUT_FIELDS);
         ValidationUtil.validateIsHigherThan(load, maxCapacity, Constant.Center.MAX_CAPACITY_EXCEEDED_MESSAGE);
+    }
+
+    public void validateMaxCapacityOnUpdate(Integer load, Integer maxCapacity){
+        if (load != null && maxCapacity != null && load > maxCapacity){
+            throw new BadRequestException(Constant.Center.MAX_CAPACITY_EXCEEDED_MESSAGE, null);
+        }
     }
 }
