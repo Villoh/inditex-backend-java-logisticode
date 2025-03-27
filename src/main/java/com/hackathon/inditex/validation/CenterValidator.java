@@ -1,6 +1,7 @@
 package com.hackathon.inditex.validation;
 
 import com.hackathon.inditex.exception.BadRequestException;
+import com.hackathon.inditex.exception.InternalServerErrorException;
 import com.hackathon.inditex.model.dto.Coordinates;
 import com.hackathon.inditex.model.dto.center.CenterUpdateDTO;
 import com.hackathon.inditex.model.entity.Center;
@@ -25,6 +26,7 @@ public class CenterValidator {
      * @param center The center to be created.
      */
     public void validateCreation(Center center) {
+        validateCapacity(center.getCapacity());
         validateMaxCapacity(center.getCurrentLoad(), center.getMaxCapacity());
         validateCenterExistsByLatAndLong(center.getCoordinates());
     }
@@ -35,25 +37,40 @@ public class CenterValidator {
      * @param centerUpdateDTO The DTO containing the updated information for the center.
      */
     public void validateUpdate(CenterUpdateDTO centerUpdateDTO) {
+        Optional.ofNullable(centerUpdateDTO.getCapacity())
+                .ifPresent(this::validateCapacity);
         Optional.ofNullable(centerUpdateDTO.getCoordinates())
                 .ifPresent(this::validateCenterExistsByLatAndLong);
     }
 
+    public void validateDelete(Long id){
+        ValidationUtil.validateNotNullOrBlank(id, new InternalServerErrorException(Constant.Center.INVALID_INPUT_FIELDS, null));
+        if(!centerRepository.existsById(id)){
+            throw new InternalServerErrorException(Constant.Center.CENTER_NOT_FOUND, null);
+        }
+    }
+
     private void validateCenterExistsByLatAndLong(Coordinates coordinates) {
-        ValidationUtil.validateNotNullOrBlank(coordinates, Constant.Center.INVALID_INPUT_FIELDS);
+        ValidationUtil.validateNotNullOrBlank(coordinates, new InternalServerErrorException(Constant.Center.INVALID_INPUT_FIELDS, null));
         if (centerRepository.existsByCoordinates_LatitudeAndCoordinates_Longitude(coordinates.getLatitude(), coordinates.getLongitude())) {
-            throw new BadRequestException(Constant.Center.ALREADY_EXISTS_CENTER_IN_AREA_MESSAGE, null);
+            throw new InternalServerErrorException(Constant.Center.ALREADY_EXISTS_CENTER_IN_AREA_MESSAGE, null);
         }
     }
 
     private void validateMaxCapacity(Integer load, Integer maxCapacity) {
-        ValidationUtil.validateNotNullOrBlankBulk(Arrays.asList(load, maxCapacity), Constant.Center.INVALID_INPUT_FIELDS);
-        ValidationUtil.validateIsHigherThan(load, maxCapacity, Constant.Center.MAX_CAPACITY_EXCEEDED_MESSAGE);
+        ValidationUtil.validateNotNullOrBlankBulk(Arrays.asList(load, maxCapacity), new InternalServerErrorException(Constant.Center.INVALID_INPUT_FIELDS, null));
+        ValidationUtil.validateIsHigherThan(load, maxCapacity, new InternalServerErrorException(Constant.Center.MAX_CAPACITY_EXCEEDED_MESSAGE, null));
     }
 
     public void validateMaxCapacityOnUpdate(Integer load, Integer maxCapacity){
         if (load != null && maxCapacity != null && load > maxCapacity){
-            throw new BadRequestException(Constant.Center.MAX_CAPACITY_EXCEEDED_MESSAGE, null);
+            throw new InternalServerErrorException(Constant.Center.MAX_CAPACITY_EXCEEDED_MESSAGE, null);
         }
+    }
+
+
+    private void validateCapacity(String capacity) {
+        ValidationUtil.validateNotNullOrBlank(capacity, new InternalServerErrorException(Constant.Center.INVALID_INPUT_FIELDS, null));
+        ValidationUtil.validateRegex(capacity, "^[BMS]{1,3}$", new InternalServerErrorException(Constant.Center.UNRECOGNIZED_CAPACITY, null));
     }
 }

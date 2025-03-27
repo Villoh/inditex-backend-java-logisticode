@@ -14,5 +14,16 @@ public class Constant {
         public static final String MAX_CAPACITY_EXCEEDED_MESSAGE = "Current load cannot exceed max capacity.";
         public static final String INVALID_INPUT_FIELDS = "Invalid input fields.";
         public static final String CENTER_NOT_FOUND = "Center not found.";
+        public static final String UNRECOGNIZED_CAPACITY = "Unrecognized capacity.";
+    }
+
+    @UtilityClass
+    public static class Order {
+        public static final String ORDER_CREATED = "Order created successfully in PENDING status.";
+        public static final String NO_AVAILABLE_CENTERS = "No available centers support the order type.";
+        public static final String ALL_CENTERS_FULL = "All centers are at maximum capacity.";
+
+        public static final String PENDING_STATUS = "PENDING";
+        public static final String ASSIGNED_STATUS = "ASSIGNED";
     }
 }
