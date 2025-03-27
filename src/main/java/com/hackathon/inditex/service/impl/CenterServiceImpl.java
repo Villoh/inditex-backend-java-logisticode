@@ -67,7 +67,7 @@ public class CenterServiceImpl implements CenterService {
 
     @Override
     public ResponseMessageDTO deleteCenter(Long id) {
-        centerValidator.validateDelete(id);
+        //centerValidator.validateDelete(id);
         centerRepository.deleteById(id);
         return ResponseMessageDTO.builder()
                 .message(Constant.Center.DELETED_CENTER)

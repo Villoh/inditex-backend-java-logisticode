@@ -27,7 +27,7 @@ public class CenterValidator {
      * @param center The center to be created.
      */
     public void validateCreation(Center center) {
-        validateCapacity(center.getCapacity());
+//        validateCapacity(center.getCapacity());
         validateMaxCapacity(center.getCurrentLoad(), center.getMaxCapacity());
         validateCenterExistsByLatAndLong(center.getCoordinates());
     }
@@ -38,8 +38,8 @@ public class CenterValidator {
      * @param centerUpdateDTO The DTO containing the updated information for the center.
      */
     public void validateUpdate(CenterUpdateDTO centerUpdateDTO) {
-        Optional.ofNullable(centerUpdateDTO.getCapacity())
-                .ifPresent(this::validateCapacity);
+//        Optional.ofNullable(centerUpdateDTO.getCapacity())
+//                .ifPresent(this::validateCapacity);
         Optional.ofNullable(centerUpdateDTO.getCoordinates())
                 .ifPresent(this::validateCenterExistsByLatAndLong);
     }
