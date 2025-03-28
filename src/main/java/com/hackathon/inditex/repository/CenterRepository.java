@@ -11,15 +11,12 @@ public interface CenterRepository extends JpaRepository<Center, Long> {
 
     boolean existsByCoordinates_LatitudeAndCoordinates_Longitude(Double latitude, Double longitude);
 
-    @Query(value = """
-    SELECT c.*,
-           (6371 * ACOS(COS(RADIANS(:lat)) * COS(RADIANS(c.latitude)) *
-                        COS(RADIANS(c.longitude) - RADIANS(:lon)) +
-                        SIN(RADIANS(:lat)) * SIN(RADIANS(c.latitude)))) AS distance
-    FROM centers c
-    WHERE c.capacity LIKE %:size%
-    ORDER BY distance ASC
-    """, nativeQuery = true)
-    List<Center> findClosestCenter(@Param("lat") double lat, @Param("lon") double lon, @Param("size") String size);
-
+    /**
+     * Finds centers filtered by capacity size.
+     *
+     * @param size Capacity size filter.
+     * @return A list of centers matching the capacity size.
+     */
+    @Query("SELECT c FROM Center c WHERE c.capacity LIKE %:size%")
+    List<Center> findCentersByCapacitySize(@Param("size") String size);
 }

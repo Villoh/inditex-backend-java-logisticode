@@ -22,4 +22,8 @@ public class ValidationUtil {
                 .filter(value -> value > max)
                 .ifPresent(value -> { throw exception; });
     }
+
+    public static boolean isSmallerThan(Integer actual, Integer min) {
+        return actual < min;
+    }
 }
