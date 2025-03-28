@@ -14,7 +14,6 @@ public class Constant {
         public static final String MAX_CAPACITY_EXCEEDED_MESSAGE = "Current load cannot exceed max capacity.";
         public static final String INVALID_INPUT_FIELDS = "Invalid input fields.";
         public static final String CENTER_NOT_FOUND = "Center not found.";
-        public static final String UNRECOGNIZED_CAPACITY = "Unrecognized capacity.";
     }
 
     @UtilityClass

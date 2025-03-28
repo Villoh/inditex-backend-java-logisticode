@@ -13,7 +13,6 @@ import com.hackathon.inditex.validation.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,49 +83,12 @@ public class OrderServiceImpl implements OrderService {
      * @return The processed order DTO, either assigned or failed.
      */
     private ProcessedOrderDTO processOrder(Order order) {
-        List<Center> closestCenters = findClosestCenters(order.getCoordinates().getLatitude(),
+        List<Center> closestCenters = centerRepository.findClosestCenter(order.getCoordinates().getLatitude(),
                 order.getCoordinates().getLongitude(), order.getSize());
 
-        return assignOrderOrFail(order, closestCenters);
-    }
-
-    /**
-     * Finds the closest centers based on the provided latitude, longitude, and capacity size.
-     *
-     * @param lat Latitude of the reference location.
-     * @param lon Longitude of the reference location.
-     * @param size Capacity size filter.
-     * @return A list of centers ordered by distance in ascending order.
-     */
-    private List<Center> findClosestCenters(double lat, double lon, String size) {
-        List<Center> centers = centerRepository.findCentersByCapacitySize(size);
-
-        // Sort centers by distance from the reference location in ascending order.
-        centers.sort(Comparator.comparingDouble(center -> geoUtil.calculateDistance(lat, lon, center.getCoordinates().getLatitude(), center.getCoordinates().getLongitude())));
-
-        return centers;
-    }
-
-
-    /**
-     * Assigns an order to the closest available center, or fails if no centers are available or all are full.
-     *
-     * <p>This method first checks if there are any available centers in the list. If there are no centers,
-     * it creates a failed order indicating that no centers are available. If there are centers, it attempts
-     * to find an available one. If no center is available, it creates a failed order indicating that all
-     * centers are full.</p>
-     *
-     * @param order The order to be assigned to a center. It contains the order details to be processed.
-     * @param closestCenters A list of centers sorted by proximity to the order's location. This list is used
-     *                       to find the best available center for the order.
-     * @return A {@link ProcessedOrderDTO} representing the processed order. If the order is successfully
-     *         assigned to a center, the processed order is returned with the assigned center details.
-     *         If the order fails, a failed order DTO with the appropriate failure reason is returned.
-     */
-    private ProcessedOrderDTO assignOrderOrFail(Order order, List<Center> closestCenters) {
         return closestCenters.isEmpty()
-                ? createFailedOrder(order, Constant.Order.NO_AVAILABLE_CENTERS)
-                : findAvailableCenter(order, closestCenters).orElseGet(() -> createFailedOrder(order, Constant.Order.ALL_CENTERS_FULL));
+                ? new ProcessedOrderDTO(null, order.getId(), null, order.getStatus(), Constant.Order.NO_AVAILABLE_CENTERS)
+                : findAvailableCenter(order, closestCenters).orElseGet(() -> new ProcessedOrderDTO(null, order.getId(), null, order.getStatus(), Constant.Order.ALL_CENTERS_FULL));
     }
 
     /**
@@ -148,18 +110,7 @@ public class OrderServiceImpl implements OrderService {
         center.setCurrentLoad(center.getCurrentLoad() + 1);
         centerRepository.save(center);
 
-        return new ProcessedOrderDTO(distance, order.getId(), center.getName(), order.getStatus());
-    }
-
-    /**
-     * Creates a failed order response.
-     *
-     * @param order The order that failed processing.
-     * @param reason The reason for failure.
-     * @return A DTO containing failure details.
-     */
-    private ProcessedOrderFailedDTO createFailedOrder(Order order, String reason) {
-        return new ProcessedOrderFailedDTO(null, order.getId(), null, order.getStatus(), reason);
+        return new ProcessedOrderDTO(distance, order.getId(), center.getName(), order.getStatus(), null);
     }
 
     /**

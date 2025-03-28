@@ -15,4 +15,5 @@ public class ProcessedOrderDTO {
     private Long orderId;
     private String assignedLogisticsCenter;
     private String status;
+    private String message;
 }
