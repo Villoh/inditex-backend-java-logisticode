@@ -75,11 +75,9 @@ public class OrderServiceImpl implements OrderService {
         List<Center> closestCenters = centerRepository.findClosestCenter(order.getCoordinates().getLatitude(),
                 order.getCoordinates().getLongitude(), order.getSize());
 
-        if(closestCenters.isEmpty()){
-            return createFailedOrder(order, Constant.Order.NO_AVAILABLE_CENTERS);
-        }
-
-        return findAvailableCenter(order, closestCenters).orElseGet(() -> createFailedOrder(order, Constant.Order.ALL_CENTERS_FULL));
+        return closestCenters.isEmpty()
+                ? createFailedOrder(order, Constant.Order.NO_AVAILABLE_CENTERS)
+                : findAvailableCenter(order, closestCenters).orElseGet(() -> createFailedOrder(order, Constant.Order.ALL_CENTERS_FULL));
     }
 
     /**
