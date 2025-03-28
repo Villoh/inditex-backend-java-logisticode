@@ -25,14 +25,12 @@ public class OrderController {
 
     @PostMapping()
     public ResponseEntity<OrderCreatedDTO> createOrder(@RequestBody OrderCreationDTO orderCreationDTO){
-        OrderCreatedDTO orderCreatedDTO = orderService.createOrder(orderCreationDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderCreatedDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(orderCreationDTO));
     }
 
     @GetMapping()
     public ResponseEntity<List<OrderDTO>> getAllOrders(){
-        List<OrderDTO> orders = orderService.getAllOrders();
-        return ResponseEntity.ok(orders);
+        return ResponseEntity.ok(orderService.getAllOrders());
     }
 
     @PostMapping("/order-assignations")

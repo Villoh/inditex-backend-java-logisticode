@@ -28,25 +28,21 @@ public class CenterController {
 
     @PostMapping()
     public ResponseEntity<ResponseMessageDTO> createCenter(@RequestBody CenterCreationDTO centerCreationDto){
-        ResponseMessageDTO responseMessageDTO = centerService.createCenter(centerCreationDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseMessageDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(centerService.createCenter(centerCreationDto));
     }
 
     @GetMapping()
     public ResponseEntity<List<CenterDTO>> getAllCenters(){
-        List<CenterDTO> centerDtos = centerService.getAllCenters();
-        return ResponseEntity.ok(centerDtos);
+        return ResponseEntity.ok(centerService.getAllCenters());
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<ResponseMessageDTO> updateCenter(@PathVariable Long id, @RequestBody CenterUpdateDTO centerUpdateDto){
-        ResponseMessageDTO responseMessageDTO = centerService.updateCenter(id, centerUpdateDto);
-        return ResponseEntity.ok(responseMessageDTO);
+        return ResponseEntity.ok(centerService.updateCenter(id, centerUpdateDto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseMessageDTO> deleteCenter(@PathVariable Long id){
-        ResponseMessageDTO responseMessageDTO = centerService.deleteCenter(id);
-        return ResponseEntity.ok(responseMessageDTO);
+        return ResponseEntity.ok(centerService.deleteCenter(id));
     }
 }
