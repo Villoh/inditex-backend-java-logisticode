@@ -1,5 +1,6 @@
 package com.hackathon.inditex.model.dto.order;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,5 +16,6 @@ public class ProcessedOrderDTO {
     private Long orderId;
     private String assignedLogisticsCenter;
     private String status;
+    @JsonIgnore
     private String message;
 }
