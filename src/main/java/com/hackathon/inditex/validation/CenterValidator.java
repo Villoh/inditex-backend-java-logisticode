@@ -47,13 +47,10 @@ public class CenterValidator {
     }
 
     private void validateMaxCapacity(Integer load, Integer maxCapacity) {
-        ValidationUtil.validateNotNullOrBlankBulk(List.of(load, maxCapacity), new InternalServerErrorException(Constant.Center.INVALID_INPUT_FIELDS, null));
         ValidationUtil.validateIsHigherThan(load, maxCapacity, new InternalServerErrorException(Constant.Center.MAX_CAPACITY_EXCEEDED_MESSAGE, null));
     }
 
     public void validateMaxCapacityOnUpdate(Integer load, Integer maxCapacity) {
-        Optional.ofNullable(load)
-                .filter(l -> maxCapacity != null && l > maxCapacity)
-                .ifPresent(l -> { throw new InternalServerErrorException(Constant.Center.MAX_CAPACITY_EXCEEDED_MESSAGE, null); });
+        ValidationUtil.validateIsHigherThan(load, maxCapacity, new InternalServerErrorException(Constant.Center.MAX_CAPACITY_EXCEEDED_MESSAGE, null));
     }
 }
