@@ -14,6 +14,7 @@ public class Constant {
         public static final String MAX_CAPACITY_EXCEEDED_MESSAGE = "Current load cannot exceed max capacity.";
         public static final String INVALID_INPUT_FIELDS = "Invalid input fields.";
         public static final String CENTER_NOT_FOUND = "Center not found.";
+        public static final String STATUS_AVAILABLE = "AVAILABLE";
     }
 
     @UtilityClass
@@ -24,5 +25,12 @@ public class Constant {
 
         public static final String PENDING_STATUS = "PENDING";
         public static final String ASSIGNED_STATUS = "ASSIGNED";
+    }
+
+    @UtilityClass
+    public static class Api {
+        public static final String API_BASE_PATH = "/api";
+        public static final String ORDERS_ENDPOINT = API_BASE_PATH + "/orders";
+        public static final String CENTERS_ENDPOINT = API_BASE_PATH + "/centers";
     }
 }

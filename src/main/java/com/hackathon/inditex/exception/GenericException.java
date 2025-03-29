@@ -1,6 +1,5 @@
 package com.hackathon.inditex.exception;
 
-import jakarta.annotation.Nullable;
 import lombok.Getter;
 
 /**
@@ -12,8 +11,6 @@ import lombok.Getter;
  */
 @Getter
 public class GenericException extends RuntimeException {
-    private final String message;
-    @Nullable
     private final Throwable cause;
 
     /**
@@ -24,7 +21,6 @@ public class GenericException extends RuntimeException {
      */
     public GenericException(String message, Throwable cause) {
         super(message);
-        this.message = message;
         this.cause = cause;
     }
 }

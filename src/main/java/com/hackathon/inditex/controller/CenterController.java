@@ -5,6 +5,7 @@ import com.hackathon.inditex.model.dto.center.CenterCreationDTO;
 import com.hackathon.inditex.model.dto.center.CenterDTO;
 import com.hackathon.inditex.model.dto.center.CenterUpdateDTO;
 import com.hackathon.inditex.service.CenterService;
+import com.hackathon.inditex.util.Constant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,18 +21,18 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/centers")
+@RequestMapping(Constant.Api.CENTERS_ENDPOINT)
 @RequiredArgsConstructor
 public class CenterController {
 
     private final CenterService centerService;
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<ResponseMessageDTO> createCenter(@RequestBody CenterCreationDTO centerCreationDto){
         return ResponseEntity.status(HttpStatus.CREATED).body(centerService.createCenter(centerCreationDto));
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<CenterDTO>> getAllCenters(){
         return ResponseEntity.ok(centerService.getAllCenters());
     }

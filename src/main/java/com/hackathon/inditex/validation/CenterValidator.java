@@ -25,7 +25,7 @@ public class CenterValidator {
      */
     public void validateCreation(Center center) {
         validateMaxCapacity(center.getCurrentLoad(), center.getMaxCapacity());
-        Optional.ofNullable(center.getCoordinates()).ifPresent(this::validateCenterExistsByLatAndLong);
+        Optional.ofNullable(center.getCoordinates()).ifPresent(this::validateCenterExistsByCoordinates);
     }
 
     /**
@@ -34,14 +34,14 @@ public class CenterValidator {
      * @param centerUpdateDTO The DTO containing the updated information for the center.
      */
     public void validateUpdate(CenterUpdateDTO centerUpdateDTO) {
-        Optional.ofNullable(centerUpdateDTO.getCoordinates()).ifPresent(this::validateCenterExistsByLatAndLong);
+        Optional.ofNullable(centerUpdateDTO.getCoordinates()).ifPresent(this::validateCenterExistsByCoordinates);
     }
 
 
-    private void validateCenterExistsByLatAndLong(Coordinates coordinates) {
+    private void validateCenterExistsByCoordinates(Coordinates coordinates) {
         Optional.ofNullable(coordinates).orElseThrow(() -> new InternalServerErrorException(Constant.Center.INVALID_INPUT_FIELDS, null));
         Optional.of(coordinates)
-                .filter(c -> centerRepository.existsByCoordinates_LatitudeAndCoordinates_Longitude(c.getLatitude(), c.getLongitude()))
+                .filter(centerRepository::existsByCoordinates)
                 .ifPresent(c -> { throw new InternalServerErrorException(Constant.Center.ALREADY_EXISTS_CENTER_IN_AREA_MESSAGE, null); });
     }
 

@@ -5,6 +5,7 @@ import com.hackathon.inditex.model.dto.order.OrderCreationDTO;
 import com.hackathon.inditex.model.dto.order.OrderDTO;
 import com.hackathon.inditex.model.dto.order.ProcessedOrdersListingDTO;
 import com.hackathon.inditex.service.OrderService;
+import com.hackathon.inditex.util.Constant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,18 +18,18 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping(Constant.Api.ORDERS_ENDPOINT)
 @RequiredArgsConstructor
 public class OrderController {
 
     private final OrderService orderService;
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<OrderCreatedDTO> createOrder(@RequestBody OrderCreationDTO orderCreationDTO){
         return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(orderCreationDTO));
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<OrderDTO>> getAllOrders(){
         return ResponseEntity.ok(orderService.getAllOrders());
     }

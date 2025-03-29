@@ -8,13 +8,13 @@ import com.hackathon.inditex.repository.CenterRepository;
 import com.hackathon.inditex.repository.OrderRepository;
 import com.hackathon.inditex.service.OrderService;
 import com.hackathon.inditex.util.Constant;
-import com.hackathon.inditex.validation.util.GeoUtil;
-import com.hackathon.inditex.validation.util.ValidationUtil;
+import com.hackathon.inditex.util.GeoUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * Implementation of the {@link OrderService} interface.
@@ -27,8 +27,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper orderMapper;
     private final OrderRepository orderRepository;
     private final CenterRepository centerRepository;
-    private final GeoUtil geoUtil;
-
+    private final CenterServiceImpl centerService;
 
     /**
      * Creates a new order and saves it to the repository.
@@ -83,12 +82,23 @@ public class OrderServiceImpl implements OrderService {
      * @return The processed order DTO, either assigned or failed.
      */
     private ProcessedOrderDTO processOrder(Order order) {
-        List<Center> closestCenters = centerRepository.findClosestCenter(order.getCoordinates().getLatitude(),
-                order.getCoordinates().getLongitude(), order.getSize());
+        return Optional.ofNullable(centerService.getAvailableCentersByCapacityAndSize(order.getSize()))
+                .filter(Predicate.not(List::isEmpty))
+                .map(centers -> assignToNearestCenter(order, centers))
+                .orElse(createFailedOrderDTO(order));
+    }
 
-        return closestCenters.isEmpty()
-                ? new ProcessedOrderDTO(null, order.getId(), null, order.getStatus(), Constant.Order.NO_AVAILABLE_CENTERS)
-                : findAvailableCenter(order, closestCenters).orElseGet(() -> new ProcessedOrderDTO(null, order.getId(), null, order.getStatus(), Constant.Order.ALL_CENTERS_FULL));
+    /**
+     * Finds the nearest available center for an order and assigns it.
+     *
+     * @param order The order to process.
+     * @param centers List of available centers.
+     * @return The processed order DTO.
+     */
+    private ProcessedOrderDTO assignToNearestCenter(Order order, List<Center> centers) {
+        return centerService.findNearestAvailableCenter(order, centers)
+                .map(center -> assignOrderToCenter(order, center))
+                .orElse(createFailedOrderDTO(order));
     }
 
     /**
@@ -99,7 +109,7 @@ public class OrderServiceImpl implements OrderService {
      * @return The DTO containing processed order details.
      */
     private ProcessedOrderDTO assignOrderToCenter(Order order, Center center) {
-        double distance = geoUtil.calculateDistance(
+        double distance = GeoUtil.calculateDistance(
                 order.getCoordinates().getLatitude(), order.getCoordinates().getLongitude(),
                 center.getCoordinates().getLatitude(), center.getCoordinates().getLongitude()
         );
@@ -114,16 +124,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * Finds an available center for the given order.
+     * Creates a failed order DTO when no available centers are found.
      *
-     * @param order The order to assign.
-     * @param centers The list of centers to check.
-     * @return An optional containing the processed order DTO if a center is found.
+     * @param order The order that could not be assigned.
+     * @return A processed order DTO with failure information.
      */
-    private Optional<ProcessedOrderDTO> findAvailableCenter(Order order, List<Center> centers) {
-        return centers.stream()
-                .filter(center -> ValidationUtil.isSmallerThan(center.getCurrentLoad(), center.getMaxCapacity()))
-                .findFirst()
-                .map(center -> assignOrderToCenter(order, center));
+    private ProcessedOrderDTO createFailedOrderDTO(Order order){
+        return new ProcessedOrderDTO(null, order.getId(), null, order.getStatus(), Constant.Order.NO_AVAILABLE_CENTERS);
     }
 }
