@@ -4,6 +4,7 @@ import com.hackathon.inditex.model.dto.ResponseMessageDTO;
 import com.hackathon.inditex.model.dto.center.CenterCreationDTO;
 import com.hackathon.inditex.model.dto.center.CenterDTO;
 import com.hackathon.inditex.model.dto.center.CenterUpdateDTO;
+import com.hackathon.inditex.model.entity.Center;
 
 import java.util.List;
 
@@ -47,4 +48,6 @@ public interface CenterService {
      *         including success or failure message.
      */
     ResponseMessageDTO deleteCenter(Long id);
+
+    List<Center> getAvailableCentersByCapacityAndSize(String size);
 }

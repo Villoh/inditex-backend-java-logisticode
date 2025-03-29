@@ -136,6 +136,7 @@ public class CenterServiceImpl implements CenterService {
      * @param size The size of the order.
      * @return A list of available centers that can handle the order size.
      */
+    @Override
     public List<Center> getAvailableCentersByCapacityAndSize(String size) {
         return centerRepository.findByStatus(Constant.Center.STATUS_AVAILABLE).stream()
                 .filter(center -> ValidationUtil.isSmallerThan(center.getCurrentLoad(), center.getMaxCapacity()))
