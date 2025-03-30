@@ -20,6 +20,6 @@ USER inditex_user
 EXPOSE 3000
 
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 --start-period=30s \
-    CMD wget --quiet --spider http://localhost:3000/actuator/health || exit 1
+CMD wget --quiet --spider http://localhost:3000/health || exit 1
 
 ENTRYPOINT ["java", "-jar", "/app/inditex-0.0.1-SNAPSHOT.jar"]
