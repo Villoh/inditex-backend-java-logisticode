@@ -31,12 +31,6 @@
 		<org.projectlombok.lombok>1.18.30</org.projectlombok.lombok>
 	</properties>
 	<dependencies>
-		<!-- Fix vulnerability CVE-2025-24813 -->
-		<dependency>
-			<groupId>org.apache.tomcat.embed</groupId>
-			<artifactId>tomcat-embed-core</artifactId>
-			<version>11.0.5</version>
-		</dependency>
 		<!-- Fix vulnerability CVE-2024-31573 -->
 		<dependency>
 			<groupId>org.xmlunit</groupId>
