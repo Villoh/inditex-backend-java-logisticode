@@ -11,12 +11,11 @@ import lombok.Getter;
 public class NotFoundException extends GenericException {
 
     /**
-     * Constructs a new instance of BadRequestException with the specified success status, message, and cause.
+     * Constructs a new instance of BadRequestException with the specified message.
      *
      * @param message  the error message
-     * @param cause     the cause of the exception (optional)
      */
-    public NotFoundException(String message, Throwable cause) {
-        super(message, cause);
+    public NotFoundException(String message) {
+        super(message);
     }
 }

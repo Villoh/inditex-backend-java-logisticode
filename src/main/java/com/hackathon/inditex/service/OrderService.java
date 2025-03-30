@@ -3,7 +3,10 @@ package com.hackathon.inditex.service;
 import com.hackathon.inditex.model.dto.order.OrderCreatedDTO;
 import com.hackathon.inditex.model.dto.order.OrderCreationDTO;
 import com.hackathon.inditex.model.dto.order.OrderDTO;
+import com.hackathon.inditex.model.dto.order.ProcessedOrderDTO;
 import com.hackathon.inditex.model.dto.order.ProcessedOrdersListingDTO;
+import com.hackathon.inditex.model.entity.Center;
+import com.hackathon.inditex.model.entity.Order;
 
 import java.util.List;
 
@@ -36,4 +39,31 @@ public interface OrderService {
      *         including the list of orders with their assigned centers and any processing messages.
      */
     ProcessedOrdersListingDTO asignCenters();
+
+    /**
+     * Finds the nearest available center for an order and assigns it.
+     *
+     * @param order The order to process.
+     * @param centers List of available centers.
+     * @return The processed order DTO.
+     */
+    ProcessedOrderDTO assignToNearestCenter(Order order, List<Center> centers);
+
+    /**
+     * Assigns an order to a given center and updates the repository.
+     *
+     * @param order The order to assign.
+     * @param center The center where the order is assigned.
+     * @return The DTO containing processed order details.
+     */
+    ProcessedOrderDTO assignOrderToCenter(Order order, Center center);
+
+    /**
+     * Processes an order by finding the closest available center.
+     *
+     * @param order The order to process.
+     * @return The processed order DTO, either assigned or failed.
+     */
+    ProcessedOrderDTO processOrder(Order order);
+
 }

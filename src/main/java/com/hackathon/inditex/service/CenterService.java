@@ -5,8 +5,10 @@ import com.hackathon.inditex.model.dto.center.CenterCreationDTO;
 import com.hackathon.inditex.model.dto.center.CenterDTO;
 import com.hackathon.inditex.model.dto.center.CenterUpdateDTO;
 import com.hackathon.inditex.model.entity.Center;
+import com.hackathon.inditex.model.entity.Order;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service interface for managing centers.
@@ -49,5 +51,43 @@ public interface CenterService {
      */
     ResponseMessageDTO deleteCenter(Long id);
 
+    /**
+     * Retrieves available centers that have capacity for a given order size.
+     *
+     * @param size The size of the order.
+     * @return A list of available centers that can handle the order size.
+     */
     List<Center> getAvailableCentersByCapacityAndSize(String size);
+
+    /**
+     * Updates only non-null fields of a center entity.
+     *
+     * @param centerUpdateDTO The DTO containing updated center details.
+     * @param center The center entity to update.
+     */
+    void updateNotNullFields(CenterUpdateDTO centerUpdateDTO, Center center);
+
+    /**
+     * Finds the nearest available center for an order.
+     *
+     * @param order The order to find a center for.
+     * @param centers The list of available centers.
+     * @return An optional containing the nearest center, if found.
+     */
+    Optional<Center> findNearestAvailableCenter(Order order, List<Center> centers);
+
+    /**
+     * Saves a center entity to the repository.
+     *
+     * @param center The center entity to save.
+     */
+    void saveCenter(Center center);
+
+    /**
+     * Finds a center by its ID.
+     *
+     * @param id The ID of the center.
+     * @return The found center entity.
+     */
+    Center findCenterById(Long id);
 }

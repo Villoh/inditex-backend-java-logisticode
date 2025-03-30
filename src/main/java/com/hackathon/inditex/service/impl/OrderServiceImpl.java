@@ -1,7 +1,11 @@
 package com.hackathon.inditex.service.impl;
 
 import com.hackathon.inditex.mapper.OrderMapper;
-import com.hackathon.inditex.model.dto.order.*;
+import com.hackathon.inditex.model.dto.order.OrderCreatedDTO;
+import com.hackathon.inditex.model.dto.order.OrderCreationDTO;
+import com.hackathon.inditex.model.dto.order.OrderDTO;
+import com.hackathon.inditex.model.dto.order.ProcessedOrderDTO;
+import com.hackathon.inditex.model.dto.order.ProcessedOrdersListingDTO;
 import com.hackathon.inditex.model.entity.Center;
 import com.hackathon.inditex.model.entity.Order;
 import com.hackathon.inditex.repository.CenterRepository;
@@ -81,11 +85,12 @@ public class OrderServiceImpl implements OrderService {
      * @param order The order to process.
      * @return The processed order DTO, either assigned or failed.
      */
-    private ProcessedOrderDTO processOrder(Order order) {
+    @Override
+    public ProcessedOrderDTO processOrder(Order order) {
         return Optional.ofNullable(centerService.getAvailableCentersByCapacityAndSize(order.getSize()))
                 .filter(Predicate.not(List::isEmpty))
                 .map(centers -> assignToNearestCenter(order, centers))
-                .orElse(createFailedOrderDTO(order));
+                .orElse(createFailedOrderDTO(order, Constant.Order.NO_AVAILABLE_CENTERS));
     }
 
     /**
@@ -95,10 +100,11 @@ public class OrderServiceImpl implements OrderService {
      * @param centers List of available centers.
      * @return The processed order DTO.
      */
-    private ProcessedOrderDTO assignToNearestCenter(Order order, List<Center> centers) {
+    @Override
+    public ProcessedOrderDTO assignToNearestCenter(Order order, List<Center> centers) {
         return centerService.findNearestAvailableCenter(order, centers)
                 .map(center -> assignOrderToCenter(order, center))
-                .orElse(createFailedOrderDTO(order));
+                .orElse(createFailedOrderDTO(order, Constant.Order.ALL_CENTERS_FULL));
     }
 
     /**
@@ -108,7 +114,8 @@ public class OrderServiceImpl implements OrderService {
      * @param center The center where the order is assigned.
      * @return The DTO containing processed order details.
      */
-    private ProcessedOrderDTO assignOrderToCenter(Order order, Center center) {
+    @Override
+    public ProcessedOrderDTO assignOrderToCenter(Order order, Center center) {
         double distance = GeoUtil.calculateDistance(
                 order.getCoordinates().getLatitude(), order.getCoordinates().getLongitude(),
                 center.getCoordinates().getLatitude(), center.getCoordinates().getLongitude()
@@ -129,7 +136,7 @@ public class OrderServiceImpl implements OrderService {
      * @param order The order that could not be assigned.
      * @return A processed order DTO with failure information.
      */
-    private ProcessedOrderDTO createFailedOrderDTO(Order order){
-        return new ProcessedOrderDTO(null, order.getId(), null, order.getStatus(), Constant.Order.NO_AVAILABLE_CENTERS);
+    private ProcessedOrderDTO createFailedOrderDTO(Order order, String message){
+        return new ProcessedOrderDTO(null, order.getId(), null, order.getStatus(), message);
     }
 }

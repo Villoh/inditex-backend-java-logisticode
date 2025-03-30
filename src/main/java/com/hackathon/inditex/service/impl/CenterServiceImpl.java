@@ -22,7 +22,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Service implementation for managing centers.
+ * Implementation of the {@link CenterService} interface.
+ * This class provides methods to create, retrieve, update, and delete centers. It also includes validation logic for creating new centers.
  */
 @Service
 @RequiredArgsConstructor
@@ -83,11 +84,12 @@ public class CenterServiceImpl implements CenterService {
      *
      * @param id The ID of the center to delete.
      * @return A response message indicating success.
+     * @throws NotFoundException if the center is not found.
      */
     @Override
     public ResponseMessageDTO deleteCenter(Long id) {
         centerRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(Constant.Center.CENTER_NOT_FOUND, null));
+                .orElseThrow(() -> new NotFoundException(Constant.Center.CENTER_NOT_FOUND));
         centerRepository.deleteById(id);
         return ResponseMessageDTO.builder()
                 .message(Constant.Center.DELETED_CENTER)
@@ -101,9 +103,10 @@ public class CenterServiceImpl implements CenterService {
      * @return The found center entity.
      * @throws NotFoundException if the center is not found.
      */
-    private Center findCenterById(Long id) {
+    @Override
+    public Center findCenterById(Long id) {
         return centerRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(Constant.Center.CENTER_NOT_FOUND, null));
+                .orElseThrow(() -> new NotFoundException(Constant.Center.CENTER_NOT_FOUND));
     }
 
     /**
@@ -111,7 +114,8 @@ public class CenterServiceImpl implements CenterService {
      *
      * @param center The center entity to save.
      */
-    private void saveCenter(Center center) {
+    @Override
+    public void saveCenter(Center center) {
         centerRepository.save(center);
     }
 
@@ -121,7 +125,8 @@ public class CenterServiceImpl implements CenterService {
      * @param centerUpdateDTO The DTO containing updated center details.
      * @param center The center entity to update.
      */
-    private void updateNotNullFields(CenterUpdateDTO centerUpdateDTO, Center center) {
+    @Override
+    public void updateNotNullFields(CenterUpdateDTO centerUpdateDTO, Center center) {
         Optional.ofNullable(centerUpdateDTO.getName()).ifPresent(center::setName);
         Optional.ofNullable(centerUpdateDTO.getCapacity()).ifPresent(center::setCapacity);
         Optional.ofNullable(centerUpdateDTO.getStatus()).ifPresent(center::setStatus);
@@ -151,6 +156,7 @@ public class CenterServiceImpl implements CenterService {
      * @param centers The list of available centers.
      * @return An optional containing the nearest center, if found.
      */
+    @Override
     public Optional<Center> findNearestAvailableCenter(Order order, List<Center> centers) {
         return centers.stream()
                 .min(Comparator.comparingDouble(center -> GeoUtil.calculateDistance(

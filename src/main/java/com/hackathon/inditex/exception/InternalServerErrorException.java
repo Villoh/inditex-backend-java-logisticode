@@ -12,12 +12,11 @@ import lombok.Getter;
 public class InternalServerErrorException extends GenericException {
 
     /**
-     * Constructs a new instance of InternalServerErrorException with the specified success status, message, and cause.
+     * Constructs a new instance of InternalServerErrorException with the specified message.
      *
      * @param message  the error message
-     * @param cause     the cause of the exception (optional)
      */
-    public InternalServerErrorException(String message, Throwable cause) {
-        super(message, cause);
+    public InternalServerErrorException(String message) {
+        super(message);
     }
 }

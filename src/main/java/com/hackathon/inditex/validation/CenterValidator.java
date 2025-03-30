@@ -39,17 +39,17 @@ public class CenterValidator {
 
 
     private void validateCenterExistsByCoordinates(Coordinates coordinates) {
-        Optional.ofNullable(coordinates).orElseThrow(() -> new InternalServerErrorException(Constant.Center.INVALID_INPUT_FIELDS, null));
+        Optional.ofNullable(coordinates).orElseThrow(() -> new InternalServerErrorException(Constant.Center.INVALID_INPUT_FIELDS));
         Optional.of(coordinates)
                 .filter(centerRepository::existsByCoordinates)
-                .ifPresent(c -> { throw new InternalServerErrorException(Constant.Center.ALREADY_EXISTS_CENTER_IN_AREA_MESSAGE, null); });
+                .ifPresent(c -> { throw new InternalServerErrorException(Constant.Center.ALREADY_EXISTS_CENTER_IN_AREA_MESSAGE); });
     }
 
     private void validateMaxCapacity(Integer load, Integer maxCapacity) {
-        ValidationUtil.validateIsHigherThan(load, maxCapacity, new InternalServerErrorException(Constant.Center.MAX_CAPACITY_EXCEEDED_MESSAGE, null));
+        ValidationUtil.validateIsHigherThan(load, maxCapacity, new InternalServerErrorException(Constant.Center.MAX_CAPACITY_EXCEEDED_MESSAGE));
     }
 
     public void validateMaxCapacityOnUpdate(Integer load, Integer maxCapacity) {
-        ValidationUtil.validateIsHigherThan(load, maxCapacity, new InternalServerErrorException(Constant.Center.MAX_CAPACITY_EXCEEDED_MESSAGE, null));
+        ValidationUtil.validateIsHigherThan(load, maxCapacity, new InternalServerErrorException(Constant.Center.MAX_CAPACITY_EXCEEDED_MESSAGE));
     }
 }
